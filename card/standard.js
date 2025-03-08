@@ -3191,54 +3191,30 @@ game.import("card", function () {
 						return true;
 					});
 				},
-				log: false,
 				async cost(event, trigger, player) {
-					const next = player.chooseTarget(get.prompt2("fangtian"));
-
-					next.set("selectTarget", [1, Infinity]);
-					next.set("filterTarget", filterTarget);
-					next.set("promptbar", "none");
-					next.set("complexTarget", true);
-					next.set("cardx", trigger.card);
-					next.set("targets", trigger.targets);
-					next.set("ai", check);
-
-					event.result = await next.forResult();
-
-					function filterTarget(card, player, target) {
-						const cardx = get.event("cardx");
-
-						if (!lib.filter.filterTarget(cardx, player, target)) {
-							return false;
-						}
-
-						const targets = get.event("targets").concat(ui.selected.targets);
-
-						if (targets.includes(target)) {
-							return false;
-						}
-						if (target.identity == "ye" || target.identity == "unknown") {
-							return true;
-						}
-
-						for (let i = 0; i < targets.length; i++) {
-							if (target.identity == targets[i].identity) {
-								return false;
+					event.result = await player
+						.chooseTarget(get.prompt2("fangtian"), [1, Infinity], (card, player, target) => {
+							let { targets, cardx } = get.event();
+							if (!lib.filter.filterTarget(cardx, player, target)) return false;
+							targets = targets.slice(0).concat(ui.selected.targets);
+							if (targets.includes(target)) return false;
+							if (target.identity == "ye" || target.identity == "unknown") return true;
+							for (let i = 0; i < targets.length; i++) {
+								if (target.identity == targets[i].identity) return false;
 							}
-						}
-
-						return true;
-					}
-
-					function check(target) {
-						const player = get.player();
-						const card = get.event("cardx");
-						return get.effect(target, card, player, player);
-					}
+							return true;
+						})
+						.set("promptbar", "none")
+						.set("cardx", trigger.card)
+						.set("targets", trigger.targets)
+						.set("ai", target => {
+							const { player, cardx } = get.event();
+							return get.effect(target, cardx, player, player);
+						})
+						.set("complexTarget", true)
+						.forResult();
 				},
 				async content(event, trigger, player) {
-					player.logSkill("fangtian_skill", event.targets);
-
 					trigger.targets.addArray(event.targets);
 					player.addTempSkill(event.name + "_trigger");
 					player.markAuto(event.name + "_trigger", [trigger.card]);
@@ -3253,11 +3229,8 @@ game.import("card", function () {
 						onremove: true,
 						charlotte: true,
 						async content(event, trigger, player) {
-							if (event.triggername == "shaMiss" && player.getStorage(event.name).includes(trigger.card)) {
-								trigger.getParent().excluded.addArray(trigger.getParent().targets);
-							} else {
-								player.unmarkAuto(event.name, [trigger.card]);
-							}
+							if (event.triggername == "shaMiss" && player.getStorage(event.name).includes(trigger.card)) trigger.getParent().excluded.addArray(trigger.getParent().targets);
+							else player.unmarkAuto(event.name, [trigger.card]);
 						},
 					},
 				},
