@@ -4594,7 +4594,7 @@ const skills = {
 					var card = button.link;
 					return get.is.attackingMount(card) || get.is.defendingMount(card);
 				});
-			("step 1");
+			"step 1";
 			var evt = event.getParent(2);
 			if (result.bool && result.links && result.links.length) {
 				var name = event.cardName || (get.is.attackingMount(result.links[0]) ? "sha" : "shan");
@@ -4712,7 +4712,7 @@ const skills = {
 					var targets = game.filterPlayer().sortBySeat(player.getNext());
 					event.targets = targets;
 					event.num = 0;
-					("step 1");
+					"step 1";
 					var target = event.targets[num];
 					if (target.isIn()) {
 						var card = get.cardPile2(function (card) {
@@ -4738,14 +4738,12 @@ const skills = {
 					player.popup(event.result.card.name, "metal");
 					game.delayx();
 					event.getParent().addCount = false;
-					("step 1");
+					"step 1";
 					if (player != target) target.addTempSkill("fengyin");
 					target.addTempSkill("shouli_thunder");
 					player.addTempSkill("shouli_thunder");
 				},
-				filterCard() {
-					return false;
-				},
+				filterCard: () => false,
 				prompt: "请选择【杀】的目标",
 				selectCard: -1,
 				log: false,
