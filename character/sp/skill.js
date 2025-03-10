@@ -10979,8 +10979,8 @@ const skills = {
 				popup: false,
 				content() {
 					const evt = trigger.getParent("phase", true, true);
-					if (evt && evt.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseDraw|olhongji");
-					player.removeSkill("olhongji_draw");
+					if (evt?.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseDraw|olhongji");
+					player.removeSkill(event.name);
 				},
 			},
 			use: {
@@ -10990,8 +10990,8 @@ const skills = {
 				popup: false,
 				content() {
 					const evt = trigger.getParent("phase", true, true);
-					if (evt && evt.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseUse|olhongji");
-					player.removeSkill("olhongji_use");
+					if (evt?.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseUse|olhongji");
+					player.removeSkill(event.name);
 				},
 			},
 		},
@@ -11663,11 +11663,9 @@ const skills = {
 		audio: 2,
 		trigger: { player: "phaseEnd" },
 		forced: true,
-		content() {
-			"step 0";
-			player.damage("nosource");
-			"step 1";
-			trigger.phaseList.splice(trigger.num, 0, "phaseUse|oldianjun");
+		async content(event, trigger, player) {
+			await player.damage("nosource");
+			trigger.phaseList.splice(trigger.num, 0, `phaseUse|${event.name}`);
 		},
 		ai: {
 			combo: "olkangrui",
