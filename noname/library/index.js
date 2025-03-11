@@ -14221,6 +14221,13 @@ export class Library {
 				getSpan: () => `${get.prefixSpan("TW")}${get.prefixSpan("谋")}`,
 			},
 		],
+		[
+			"闪",
+			{
+				color: "#00bfff",
+				nature: "watermm",
+			},
+		],
 	]);
 	groupnature = {
 		shen: "shen",
