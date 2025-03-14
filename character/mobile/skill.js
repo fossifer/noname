@@ -5378,7 +5378,7 @@ const skills = {
 					event.dialog?.close();
 					event.control_ok?.close();
 					event.control_cancel?.close();
-					event._result = ai;
+					event._result = ai();
 					resolve(event._result);
 					game.resume();
 				};
